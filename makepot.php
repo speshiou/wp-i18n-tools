@@ -178,7 +178,7 @@ class MakePOT {
 		$placeholders = array_merge( $meta, $placeholders );
 		$meta['output'] = $this->realpath_missing( $output_file );
 		$placeholders['year'] = date( 'Y' );
-		$placeholder_keys = array_map( create_function( '$x', 'return "{".$x."}";' ), array_keys( $placeholders ) );
+		$placeholder_keys = array_map( function( $x ) { return '{' . $x . '}'; }, array_keys( $placeholders ) );
 		$placeholder_values = array_values( $placeholders );
 		foreach($meta as $key => $value) {
 			$meta[$key] = str_replace($placeholder_keys, $placeholder_values, $value);
@@ -685,7 +685,6 @@ class MakePOT {
 			'themes/pub/wporg-main/.*',
 			'themes/pub/wporg-login/.*',
 			'themes/pub/wporg-breathe/.*',
-			'themes/pub/gutenberg/.*',
 			'mu-plugins/pub/class-o2-follow.php',
 		) );
 	}

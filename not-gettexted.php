@@ -67,14 +67,16 @@ class NotGettexted {
 	}
 
 
-	function make_string_aggregator($global_array_name, $filename) {
-		$a = $global_array_name;
-		return create_function('$string, $comment_id, $line_number', 'global $'.$a.'; $'.$a.'[] = array($string, $comment_id, '.var_export($filename, true).', $line_number);');
+	function make_string_aggregator( $global_array_name, $filename) {
+		return function( $string, $comment_id, $line_number ) use( $global_array_name, $filename ) {
+			$GLOBALS[ $global_array_name ][] = array( $string, $comment_id, $filename, $line_number );
+		};
 	}
 
-	function make_mo_replacer($global_mo_name) {
-		$m = $global_mo_name;
-		return create_function('$token, $string', 'global $'.$m.'; return var_export($'.$m.'->translate($string), true);');
+	function make_mo_replacer( $global_mo_name ) {
+		return function( $token, $string ) use( $global_mo_name ) {
+			return var_export( $GLOBALS[ $global_mo_name ]->translate( $string ), true );
+		};
 	}
 
 	function walk_tokens(&$tokens, $string_action, $other_action, $register_action=null) {
